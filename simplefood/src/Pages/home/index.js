@@ -1,6 +1,7 @@
 import React from "react";
 import { Container, Row, Col, Button } from "reactstrap";
 import { Navbar } from "../../Components";
+import { RecipesCard } from "../../Components";
 
 const Home = () => {
   return (
@@ -9,13 +10,11 @@ const Home = () => {
       <Container>
         <Row>
           <Col>
-            <Button color="success">Button 1</Button>
+            <RecipesCard/>
           </Col>
           <Col>
-            <Button color="warning">Button 2</Button>
           </Col>
           <Col>
-            <Button color="danger">Button 3</Button>
           </Col>
         </Row>
       </Container>
