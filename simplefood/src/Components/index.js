@@ -1,3 +1,1 @@
-// const { Component } = require("react")
-
-// This is to export Components
+export { default as Navbar } from "./navbar";
