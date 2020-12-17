@@ -8,6 +8,7 @@ import {
   NavItem,
   NavLink,
 } from "reactstrap";
+import { Wrapper } from "./style";
 
 const NavBar = (props) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,23 +18,32 @@ const NavBar = (props) => {
   };
 
   return (
-    <Navbar className="shadow-lg" light expand="xl">
-      <NavbarBrand>SimpleFood</NavbarBrand>
-      <NavbarToggler onClick={toggle} />
-      <Collapse isOpen={isOpen} navbar>
-        <Nav className="ml-auto" navbar>
-          <NavItem>
-            <NavLink>Recipes</NavLink>
-          </NavItem>
-          <NavItem>
-            <NavLink>Nutrition Analysis</NavLink>
-          </NavItem>
-          <NavItem>
-            <NavLink>Compare</NavLink>
-          </NavItem>
-        </Nav>
-      </Collapse>
-    </Navbar>
+    <Wrapper>
+      <div className="navbar-wrapper">
+        <Navbar className="shadow-lg" light expand="xl">
+          <NavbarBrand className="navbar-brand-wrapper">
+            <span className="navbar-brand-left">Simple</span>
+            <span className="navbar-brand-right">Food</span>
+          </NavbarBrand>
+          <NavbarToggler onClick={toggle} />
+          <Collapse isOpen={isOpen} navbar>
+            <Nav className="ml-auto navbar-menu-wrapper" navbar>
+              <NavItem className="mx-2">
+                <NavLink className="navbar-menu" active>
+                  Recipes
+                </NavLink>
+              </NavItem>
+              <NavItem className="mx-2">
+                <NavLink className="navbar-menu">Nutrition Analysis</NavLink>
+              </NavItem>
+              <NavItem className="mx-2">
+                <NavLink className="navbar-menu">Compare</NavLink>
+              </NavItem>
+            </Nav>
+          </Collapse>
+        </Navbar>
+      </div>
+    </Wrapper>
   );
 };
 
