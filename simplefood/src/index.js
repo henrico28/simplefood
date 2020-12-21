@@ -4,10 +4,12 @@ import "./Config/index.scss";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
+// StrictMode aslinya
+
 ReactDOM.render(
-  <React.StrictMode>
+  <React.Fragment>
     <App />
-  </React.StrictMode>,
+  </React.Fragment>,
   document.getElementById("root")
 );
 
