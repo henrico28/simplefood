@@ -12,6 +12,10 @@ export const Wrapper = styled.div`
       }
     }
 
+    .navbar-brand-wrapper:hover {
+      cursor: pointer;
+    }
+
     .navbar-menu-wrapper {
       .navbar-menu {
         color: #57cc99;
