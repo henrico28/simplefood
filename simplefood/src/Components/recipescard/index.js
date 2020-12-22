@@ -9,17 +9,20 @@ import {
 } from "reactstrap";
 import { Wrapper } from "./style";
 
-const RecipesCard = (props) => {
+const RecipesCard = ({ index, name, calories, image, chooseRecipe }) => {
   return (
     <Wrapper>
-      <Card className="recipescard-wrapper">
-        <CardImg top src={props.image} alt={props.name} />
+      <Card
+        className="recipescard-wrapper"
+        onClick={() => {
+          chooseRecipe(index);
+        }}
+      >
+        <CardImg top src={image} alt={name} />
         <CardBody>
-          <CardTitle className="text-center recipescard-name">
-            {props.name}
-          </CardTitle>
+          <CardTitle className="text-center recipescard-name">{name}</CardTitle>
           <CardSubtitle className="text-center recipescard-calories-wrapper">
-            <Badge className="recipescard-calories">{props.calories} cal</Badge>
+            <Badge className="recipescard-calories">{calories} cal</Badge>
           </CardSubtitle>
         </CardBody>
       </Card>

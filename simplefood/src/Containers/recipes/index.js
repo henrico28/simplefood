@@ -13,7 +13,7 @@ import { RecipesCard, RecipePagination } from "../../Components";
 import axios from "axios";
 import { Wrapper } from "./style";
 
-const Recipes = (props) => {
+const Recipes = ({ setStep, setRecipe }) => {
   let [data, setData] = useState([]);
   let [search, setSearch] = useState("chicken");
   let [loading, setLoading] = useState(false);
@@ -54,6 +54,12 @@ const Recipes = (props) => {
     setSearch(event.target.value);
   };
 
+  const handleChooseRecipe = (idx) => {
+    let chosenData = data[idx].recipe;
+    setRecipe(chosenData);
+    setStep(1);
+  };
+
   const handleChangePage = (page) => {
     setCurrentPage(page);
   };
@@ -62,9 +68,11 @@ const Recipes = (props) => {
     return (
       <Col md={3} sm={4} className="mx-3 my-2" key={index}>
         <RecipesCard
+          index={index}
           name={recipe.recipe.label}
           calories={Number(recipe.recipe.calories).toFixed(2)}
           image={recipe.recipe.image}
+          chooseRecipe={handleChooseRecipe}
         />
       </Col>
     );
