@@ -18,6 +18,10 @@ export const Wrapper = styled.div`
 
     .recipedetails-source {
       font-size: 1rem;
+
+      .recipe-details-source-url {
+        color: #38a3a5;
+      }
     }
 
     .recipedetails-card {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Container, Spinner, Row } from "reactstrap";
-import { Navbar } from "../../Components";
+import { Footer, Navbar } from "../../Components";
 import { Recipes, RecipeDetails } from "../../Containers";
 import axios from "axios";
 import { Wrapper } from "./style";
@@ -67,6 +67,7 @@ const Home = () => {
     <React.Fragment>
       <Navbar currentPage="recipes" />
       {renderContent()}
+      <Footer />
     </React.Fragment>
   );
 };

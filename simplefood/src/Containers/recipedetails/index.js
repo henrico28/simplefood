@@ -51,7 +51,12 @@ const RecipeDetails = ({ setStep, recipe }) => {
               <Row className="my-2 justify-content-center justify-content-md-start ">
                 <h3 className="recipedetails-source">
                   (source:{" "}
-                  <a href={recipe.url} rel="noreferrer" target="_blank">
+                  <a
+                    href={recipe.url}
+                    className="recipe-details-source-url"
+                    rel="noreferrer"
+                    target="_blank"
+                  >
                     {recipe.url}
                   </a>
                   )

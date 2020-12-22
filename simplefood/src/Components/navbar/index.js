@@ -22,7 +22,7 @@ const NavBar = (props) => {
   return (
     <Wrapper>
       <div className="navbar-wrapper">
-        <Navbar className="shadow-lg" light expand="xl">
+        <Navbar className="shadow" light expand="xl">
           <NavbarBrand
             className="navbar-brand-wrapper"
             onClick={() => {
