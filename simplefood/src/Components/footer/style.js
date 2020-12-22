@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const Wrapper = styled.div`
   .footer-wrapper {
-    margin-top: 10px;
+    margin-top: 20px;
 
     .footer-text {
       color: #22577a;
