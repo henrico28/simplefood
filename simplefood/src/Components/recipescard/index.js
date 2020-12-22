@@ -22,7 +22,7 @@ const RecipesCard = ({ index, name, calories, image, chooseRecipe }) => {
         <CardBody>
           <CardTitle className="text-center recipescard-name">{name}</CardTitle>
           <CardSubtitle className="text-center recipescard-calories-wrapper">
-            <Badge className="recipescard-calories">{calories} cal</Badge>
+            <Badge className="recipescard-calories">{calories} kcal</Badge>
           </CardSubtitle>
         </CardBody>
       </Card>

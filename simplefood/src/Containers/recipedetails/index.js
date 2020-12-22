@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { Container, Row, Col, Button, Badge } from "reactstrap";
 import { Wrapper } from "./style";
 
@@ -41,7 +40,7 @@ const RecipeDetails = ({ setStep, recipe }) => {
               </Row>
               <Row className="my-1 justify-content-center justify-content-md-start">
                 <Badge className="recipedetails-calories">
-                  {Number(recipe.calories).toFixed(2)} cal
+                  {Number(recipe.calories).toFixed(2)} kcal
                 </Badge>
               </Row>
               <Row className="mt-3 mb-2 justify-content-center justify-content-md-start">
@@ -52,9 +51,9 @@ const RecipeDetails = ({ setStep, recipe }) => {
               <Row className="my-2 justify-content-center justify-content-md-start ">
                 <h3 className="recipedetails-source">
                   (source:{" "}
-                  <Link to={recipe.url} target="_blank">
+                  <a href={recipe.url} rel="noreferrer" target="_blank">
                     {recipe.url}
-                  </Link>
+                  </a>
                   )
                 </h3>
               </Row>
