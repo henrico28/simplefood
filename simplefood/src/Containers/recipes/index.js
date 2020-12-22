@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Container,
   Row,
@@ -7,47 +7,29 @@ import {
   FormGroup,
   Button,
   Input,
-  Spinner,
 } from "reactstrap";
 import { RecipesCard, RecipePagination } from "../../Components";
-import axios from "axios";
 import { Wrapper } from "./style";
 
-const Recipes = ({ setStep, setRecipe }) => {
-  let [data, setData] = useState([]);
-  let [search, setSearch] = useState("chicken");
-  let [loading, setLoading] = useState(false);
+const Recipes = ({
+  setStep,
+  recipes,
+  curretSearch,
+  searchRecipe,
+  setRecipe,
+}) => {
+  let [data] = useState(recipes);
+  let [search, setSearch] = useState(curretSearch);
   let [currentPage, setCurrentPage] = useState(1);
   let [numPerPage] = useState(6);
-  let [totalData, setTotalData] = useState();
+  let [totalData] = useState(recipes.length);
   const indexOfLastPage = currentPage * numPerPage;
   const indexOfFirstPage = indexOfLastPage - numPerPage;
   const currentData = data.slice(indexOfFirstPage, indexOfLastPage);
 
-  const API_ID = "95ce69a6";
-  const API_KEY = "b0161b6ae0d6217f731a94d8b97be6ea";
-  const req = `https://api.edamam.com/search?q=${search}&app_id=${API_ID}&app_key=${API_KEY}`;
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      const res = await axios.get(req);
-      setData(res.data.hits);
-      setTotalData(res.data.hits.length);
-      console.log(res.data);
-      setLoading(false);
-    };
-    fetchData();
-  }, []);
-
   const handleSearch = async (event) => {
     event.preventDefault();
-    setLoading(true);
-    const res = await axios.get(req);
-    setData(res.data.hits);
-    setTotalData(res.data.hits.length);
-    setCurrentPage(1);
-    setLoading(false);
+    searchRecipe(search);
   };
 
   const handleSearchInput = (event) => {
@@ -77,23 +59,6 @@ const Recipes = ({ setStep, setRecipe }) => {
       </Col>
     );
   });
-
-  if (loading) {
-    return (
-      <Wrapper>
-        <div className="wrapper-recipes-loading">
-          <Container
-            className="min-vh-100 d-flex flex-column justify-content-center"
-            fluid
-          >
-            <Row className="d-flex justify-content-center">
-              <Spinner className="recipes-spinner" />
-            </Row>
-          </Container>
-        </div>
-      </Wrapper>
-    );
-  }
 
   return (
     <Wrapper>
