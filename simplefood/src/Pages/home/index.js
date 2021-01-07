@@ -66,7 +66,14 @@ const Home = () => {
   return (
     <React.Fragment>
       <Navbar currentPage="recipes" />
-      {renderContent()}
+      <Recipes
+        // {renderContent()}
+        // setStep={setStep}
+        recipes={data}
+        // curretSearch={search}
+        searchRecipe={setSearch}
+        // setRecipe={setRecipe}
+      />
       <Footer />
     </React.Fragment>
   );

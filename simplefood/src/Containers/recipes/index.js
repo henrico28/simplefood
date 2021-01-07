@@ -50,10 +50,12 @@ const Recipes = ({
     return (
       <Col md={3} sm={4} className="mx-3 my-2" key={index}>
         <RecipesCard
-          index={index}
+          // disini sbenernya lu bsa ngirim recipe doang props nya, nah ntar label img sgala macem bsa dapet dr 1 props doang
+          // index={index}
           name={recipe.recipe.label}
           calories={Number(recipe.recipe.calories).toFixed(2)}
           image={recipe.recipe.image}
+          recipe={recipe.recipe} //buat passing props dr parent, props ini udh include smua data kan harusnya
           chooseRecipe={handleChooseRecipe}
         />
       </Col>
