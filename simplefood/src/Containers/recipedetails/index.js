@@ -39,7 +39,7 @@ const RecipeDetails = ({ setStep, recipe }) => {
                 <h1 className="recipedetails-name">{recipe.label}</h1>
               </Row>
               <Row className="my-1 justify-content-center justify-content-md-start">
-                <Badge className="recipedetails-calories">
+                <Badge color={`${Number(recipe.calories).toFixed(2) < 2250 ? "success" : "danger"}`}>
                   {Number(recipe.calories).toFixed(2)} kcal
                 </Badge>
               </Row>

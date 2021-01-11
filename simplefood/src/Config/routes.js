@@ -1,7 +1,8 @@
-import { Home, NutriotionAnalyze } from "../Pages";
+import { Home, NutriotionAnalyze, Compare } from "../Pages";
 
 const routes = [
   { path: "/nutritionanalyze", component: NutriotionAnalyze },
+  { path: "/compare", component: Compare },
   { path: "/", component: Home },
 ];
 

@@ -37,7 +37,7 @@ const RecipesCard = ({
             {recipe.label}
           </CardTitle>
           <CardSubtitle className="text-center recipescard-calories-wrapper">
-            <Badge className="recipescard-calories">
+            <Badge color={`${Number(recipe.calories).toFixed(2) < 2250 ? "success" : "danger"}`}>
               {Number(recipe.calories).toFixed(2)} kcal
             </Badge>
           </CardSubtitle>

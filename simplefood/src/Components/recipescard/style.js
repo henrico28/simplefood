@@ -12,9 +12,6 @@ export const Wrapper = styled.div`
 
     .recipescard-calories-wrapper {
       font-size: 1rem;
-      .recipescard-calories {
-        background-color: #57cc99;
-      }
     }
   }
 `;
