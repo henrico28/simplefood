@@ -2,26 +2,25 @@ import React from "react";
 import { Container, Row, Col, Button, Badge } from "reactstrap";
 import { Wrapper } from "./style";
 
-const RecipeDetails = (props) => {
-  let recipe = props.location.data;
-  // let recipeLabels = "";
-  // let flag = true;
-  // recipe.dietLabels.map((diet) => {
-  //   if (flag) {
-  //     recipeLabels += diet;
-  //     flag = false;
-  //   } else {
-  //     recipeLabels += ", " + diet;
-  //   }
-  // });
-  // recipe.healthLabels.map((health) => {
-  //   if (flag) {
-  //     recipeLabels += health;
-  //     flag = false;
-  //   } else {
-  //     recipeLabels += ", " + health;
-  //   }
-  // });
+const RecipeDetails = ({ setStep, recipe }) => {
+  let recipeLabels = "";
+  let flag = true;
+  recipe.dietLabels.map((diet) => {
+    if (flag) {
+      recipeLabels += diet;
+      flag = false;
+    } else {
+      recipeLabels += ", " + diet;
+    }
+  });
+  recipe.healthLabels.map((health) => {
+    if (flag) {
+      recipeLabels += health;
+      flag = false;
+    } else {
+      recipeLabels += ", " + health;
+    }
+  });
 
   return (
     <Wrapper>
@@ -46,7 +45,7 @@ const RecipeDetails = (props) => {
               </Row>
               <Row className="mt-3 mb-2 justify-content-center justify-content-md-start">
                 <h3 className="recipedetails-labels text-muted">
-                  {/* {recipeLabels} */}
+                  {recipeLabels}
                 </h3>
               </Row>
               <Row className="my-2 justify-content-center justify-content-md-start ">
@@ -68,7 +67,7 @@ const RecipeDetails = (props) => {
           <Row className="justify-content-center my-4">
             <Col md={10} className="mx-2 recipedetails-card">
               <h1 className="recipedetails-card-title text-center my-2">
-                Ingredients
+                Ingridients
               </h1>
               <ul>
                 {recipe.ingredientLines.map((ingridient, index) => {
@@ -127,9 +126,9 @@ const RecipeDetails = (props) => {
           <Row className="justify-content-center my-3">
             <Button
               className="recipesdetails-button"
-              // onClick={() => {
-              //   setStep(0);
-              // }}
+              onClick={() => {
+                setStep(0);
+              }}
             >
               &lt; Back
             </Button>

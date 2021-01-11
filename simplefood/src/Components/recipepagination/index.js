@@ -39,6 +39,10 @@ const RecipePagination = ({
     );
   });
 
+  if (totalData === 0) {
+    return <React.Fragment></React.Fragment>;
+  }
+
   return (
     <Wrapper>
       <div className="recipepagination-wrapper">

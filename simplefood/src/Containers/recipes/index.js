@@ -7,6 +7,7 @@ import {
   FormGroup,
   Button,
   Input,
+  FormText,
 } from "reactstrap";
 import { RecipesCard, RecipePagination } from "../../Components";
 import { Wrapper } from "./style";
@@ -17,6 +18,9 @@ const Recipes = ({
   curretSearch,
   searchRecipe,
   setRecipe,
+  flag,
+  setFlag,
+  error,
 }) => {
   let [data] = useState(recipes);
   let [search, setSearch] = useState(curretSearch);
@@ -30,6 +34,7 @@ const Recipes = ({
   const handleSearch = async (event) => {
     event.preventDefault();
     searchRecipe(search);
+    setFlag(false);
   };
 
   const handleSearchInput = (event) => {
@@ -37,7 +42,7 @@ const Recipes = ({
   };
 
   const handleChooseRecipe = (idx) => {
-    let chosenData = data[idx].recipe;
+    let chosenData = currentData[idx].recipe;
     setRecipe(chosenData);
     setStep(1);
   };
@@ -51,10 +56,7 @@ const Recipes = ({
       <Col md={3} sm={4} className="mx-3 my-2" key={index}>
         <RecipesCard
           // disini sbenernya lu bsa ngirim recipe doang props nya, nah ntar label img sgala macem bsa dapet dr 1 props doang
-          // index={index}
-          name={recipe.recipe.label}
-          calories={Number(recipe.recipe.calories).toFixed(2)}
-          image={recipe.recipe.image}
+          index={index}
           recipe={recipe.recipe} //buat passing props dr parent, props ini udh include smua data kan harusnya
           chooseRecipe={handleChooseRecipe}
         />
@@ -64,9 +66,25 @@ const Recipes = ({
 
   return (
     <Wrapper>
-      <div className="wrapper-recipes">
-        <Container fluid>
-          <Form onSubmit={handleSearch}>
+      <div
+        className={`wrapper-recipes ${
+          flag === true || totalData === 0 ? "nodata-height" : ""
+        }`}
+      >
+        <Container
+          fluid
+          className={`${
+            totalData === 0
+              ? "nodata-container-height d-flex flex-column justify-content-center"
+              : ""
+          }`}
+        >
+          <Form
+            onSubmit={handleSearch}
+            className={`${
+              totalData === 0 ? "d-flex flex-column justify-content-center" : ""
+            }`}
+          >
             <FormGroup className="justify-content-center" row>
               <Col sm={6} xs={8}>
                 <Input
@@ -76,6 +94,19 @@ const Recipes = ({
                   value={search}
                   onChange={handleSearchInput}
                 />
+                <FormText
+                  className={`${
+                    totalData === 0 && flag === false && error === false
+                      ? ""
+                      : "d-none"
+                  }`}
+                >
+                  No recipes found with that name, please enter a different
+                  recipe name.
+                </FormText>
+                <FormText className={`${error === true ? "" : "d-none"}`}>
+                  Connection error, please refresh and try again.
+                </FormText>
               </Col>
               <Col sm={2} xs={4}>
                 <Button className="recipes-search-button" type="submit">

@@ -8,13 +8,9 @@ import {
   Badge,
 } from "reactstrap";
 import { Wrapper } from "./style";
-import { Link } from "react-router-dom";
 
 const RecipesCard = ({
   index,
-  name,
-  calories,
-  image,
   chooseRecipe,
   recipe, //props yang dikirim dr parent
 }) => {
@@ -22,28 +18,33 @@ const RecipesCard = ({
     /* 
       - pake library Link dari router dom
       - kirim props lagi buat ke masing2 recipe detil
-       @param: data
+      @param: data
     */
-    <Link to={{ pathname: `/recipedetail/${name}`, data: recipe }}>
-      <Wrapper>
-        <Card
-          className="recipescard-wrapper"
-          // onClick={() => {
-          //   chooseRecipe(index);
-          // }}
-        >
-          <CardImg top src={image} alt={name} />
-          <CardBody>
-            <CardTitle className="text-center recipescard-name">
-              {name}
-            </CardTitle>
-            <CardSubtitle className="text-center recipescard-calories-wrapper">
-              <Badge className="recipescard-calories">{calories} kcal</Badge>
-            </CardSubtitle>
-          </CardBody>
-        </Card>
-      </Wrapper>
-    </Link>
+    <Wrapper>
+      {/* <Link
+        style={{ textDecoration: "none" }}
+        to={{ pathname: `/recipedetail/${name}`, data: recipe }}
+      > */}
+      <Card
+        className="recipescard-wrapper"
+        onClick={() => {
+          chooseRecipe(index);
+        }}
+      >
+        <CardImg top src={recipe.image} alt={recipe.label} />
+        <CardBody>
+          <CardTitle className="text-center recipescard-name">
+            {recipe.label}
+          </CardTitle>
+          <CardSubtitle className="text-center recipescard-calories-wrapper">
+            <Badge className="recipescard-calories">
+              {Number(recipe.calories).toFixed(2)} kcal
+            </Badge>
+          </CardSubtitle>
+        </CardBody>
+      </Card>
+      {/* </Link> */}
+    </Wrapper>
   );
 };
 
