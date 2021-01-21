@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Container, Button, Table } from "reactstrap";
 import "./index.scss";
 import { Navbar } from "../../Components";
+import axios from "axios";
 
 const NutriotionAnalyze = () => {
   let qtyInput = React.createRef();
@@ -9,6 +10,10 @@ const NutriotionAnalyze = () => {
   let foodInput = React.createRef();
 
   const [itemList, setList] = useState([]);
+  const [nutrition, setNutrition] = useState([]);
+
+  const API_ID = "06857527";
+  const API_KEY = "7f0923e54e4824386bfb2a0909cd7875";
 
   const handle_add_data = () => {
     let input_value = {
@@ -16,7 +21,16 @@ const NutriotionAnalyze = () => {
       unit: unitInput.current.value,
       food: foodInput.current.value,
     };
-    setList((itemList) => [...itemList, input_value]);
+    var encode_str = encodeURIComponent(
+      input_value.qty + " " + input_value.unit + " " + input_value.food
+    );
+    const req = `https://api.edamam.com/api/nutrition-data?app_id=${API_ID}&app_key=${API_KEY}&ingr=${encode_str}`;
+    axios.get(req).then(function (response) {
+      setNutrition(response.data);
+      console.log(response);
+    });
+
+    setList((itemList) => [input_value]);
   };
 
   return (
@@ -32,7 +46,7 @@ const NutriotionAnalyze = () => {
               </div>
               <div className="col-4">
                 <p>unit</p>
-                <input ref={unitInput} name="unit" type="number" />
+                <input ref={unitInput} name="unit" type="text" />
               </div>
               <div className="col-4">
                 <p>food</p>
@@ -62,6 +76,7 @@ const NutriotionAnalyze = () => {
                       <th>Unit</th>
                       <th>Food</th>
                       <th>Calories</th>
+                      <th>Weight</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -71,7 +86,8 @@ const NutriotionAnalyze = () => {
                           <td>{item.qty}</td>
                           <td>{item.unit}</td>
                           <td>{item.food}</td>
-                          <td>0</td>
+                          <td>{nutrition.calories}</td>
+                          <td>{nutrition.totalWeight}</td>
                         </tr>
                       );
                     })}
