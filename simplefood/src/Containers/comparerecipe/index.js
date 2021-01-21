@@ -1,5 +1,5 @@
     import React, {useState} from 'react';
-    import {Container, Form, FormGroup, FormText, Input, Row, Col, Button, Spinner} from 'reactstrap';
+    import {Container, Form, FormGroup, FormText, Input, Row, Col, Button, Spinner, Progress} from 'reactstrap';
     import {RecipesCard} from '../../Components';
     import axios from 'axios';
     import {Wrapper} from './style';
@@ -60,6 +60,32 @@
         setStep2(1);
       }
 
+      let recipeLabels = "";
+      let flag = true;
+      if(recipe1){
+        recipe1.healthLabels.map((health) => {
+          if (flag) {
+            recipeLabels += health;
+            flag = false;
+          } else {
+            recipeLabels += ", " + health;
+          }
+        });
+      }
+
+      let recipeLabels2 = "";
+      let flagscnd = true;
+      if(recipe2){
+        recipe2.healthLabels.map((health) => {
+          if (flagscnd) {
+            recipeLabels2 += health;
+            flagscnd = false;
+          } else {
+            recipeLabels2 += ", " + health;
+          }
+        });
+      }
+
       const renderComponent1 = () => {
         switch (step1) {
           case 0:
@@ -78,12 +104,18 @@
             )
           case 1:
             return (
-              <Wrapper className="w-100">
-              <div className="recipedetails-wrapper">
-              <h1 className="text-center my-3 recipedetails-name">{recipe1.label}</h1>
+              <Wrapper className="w-100" style={{overflowX: "hidden"}}>
+              <div className="recipedetails-wrapper text-center mb-4">
+                <h1 className="my-3 recipedetails-name">{recipe1.label}</h1>
+                <p className="ml-1 text-white badge badge-success">{recipeLabels}</p>
+                <p className="mb-0 mt-3 recipedetails-name">Daily :</p>
+                <h3 className={`${Number(recipe1.calories) > 2250 ? "text-danger" : "text-success"}` + " font-weight-bold"}>{Number(recipe1.calories).toFixed()} / 2250 <small className="recipedetails-name">cal</small></h3>
+                <div className="px-5">
+                  <Progress color={`${Number(recipe1.calories).toFixed(2) < 2250 ? "success" : "danger"}`} value={ Number(recipe1.calories) / 22.5 } />
+                </div>
               </div>
               <div className="border m-2 recipedetails-wrapper">
-              <h5 className="recipedetails-card-text text-center mt-4 mb-3">Nutrients</h5>
+                <h5 className="recipedetails-card-text text-center mt-3 mb-3">Nutrients</h5>
               <Row className="justify-content-center">
                   <Col xs={12} md={6}>
                     <ul>
@@ -160,8 +192,14 @@
           case 1:
             return (
               <Wrapper className="w-100">
-              <div className="recipedetails-wrapper">
-              <h1 className="text-center my-3 recipedetails-name">{recipe2.label}</h1>
+              <div className="recipedetails-wrapper text-center mb-4">
+              <h1 className="my-3 recipedetails-name">{recipe2.label}</h1>
+              <p className="ml-1 text-white badge badge-success">{recipeLabels2}</p>
+              <p className="mb-0 mt-3 recipedetails-name">Daily :</p>
+                <h3 className={`${Number(recipe2.calories) > 2250 ? "text-danger" : "text-success"}` + " font-weight-bold"}>{Number(recipe2.calories).toFixed()} / 2250 <small className="recipedetails-name">cal</small></h3>
+                <div className="px-5">
+                  <Progress color={`${Number(recipe2.calories).toFixed(2) < 2250 ? "success" : "danger"}`} value={ Number(recipe2.calories) / 22.5 } />
+                </div>
               </div>
               <div className="border m-2 recipedetails-wrapper">
               <h5 className="recipedetails-card-text text-center mt-4 mb-3">Nutrients</h5>
