@@ -1,109 +1,163 @@
-import React, { useEffect, useState } from "react";
-import { Container, Button, Table } from "reactstrap";
-import "./index.scss";
-import { Navbar } from "../../Components";
+import React, { useState } from "react";
+import {
+  Container,
+  Form,
+  FormGroup,
+  Label,
+  Row,
+  Col,
+  Table,
+  Button,
+  Spinner,
+} from "reactstrap";
+import { Navbar, Footer } from "../../Components";
 import axios from "axios";
 
-const NutriotionAnalyze = () => {
+const NutriotionAnalyze = (props) => {
   let qtyInput = React.createRef();
   let unitInput = React.createRef();
   let foodInput = React.createRef();
 
-  const [itemList, setList] = useState([]);
-  const [nutrition, setNutrition] = useState([]);
+  let [loading, setLoading] = useState(false);
+  let [list, setList] = useState([]);
+  let [totalCalProtein, setTotalCalProtein] = useState(0);
+  let [totalCalFat, setTotalCalFat] = useState(0);
+  let [totalCalCarbo, setTotalCalCarbo] = useState(0);
 
   const API_ID = "06857527";
   const API_KEY = "7f0923e54e4824386bfb2a0909cd7875";
 
-  const handle_add_data = () => {
-    let input_value = {
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    let ingridient = {
       qty: qtyInput.current.value,
       unit: unitInput.current.value,
       food: foodInput.current.value,
     };
     var encode_str = encodeURIComponent(
-      input_value.qty + " " + input_value.unit + " " + input_value.food
+      ingridient.qty + " " + ingridient.unit + " " + ingridient.food
     );
     const req = `https://api.edamam.com/api/nutrition-data?app_id=${API_ID}&app_key=${API_KEY}&ingr=${encode_str}`;
-    axios.get(req).then(function (response) {
-      setNutrition(response.data);
-      console.log(response);
-    });
-
-    setList((itemList) => [input_value]);
+    setLoading(true);
+    const res = await axios.get(req);
+    setList([...list, res.data]);
+    setTotalCalProtein(
+      totalCalProtein + res.data.totalNutrientsKCal.PROCNT_KCAL.quantity
+    );
+    setTotalCalFat(totalCalFat + res.data.totalNutrientsKCal.FAT_KCAL.quantity);
+    setTotalCalCarbo(
+      totalCalCarbo + res.data.totalNutrientsKCal.CHOCDF_KCAL.quantity
+    );
+    setLoading(false);
   };
+
+  const handleRemove = (indexToRemove) => {
+    setList([...list.filter((_, index) => index !== indexToRemove)]);
+  };
+
+  const renderTableContent = list.map((list, index) => {
+    return (
+      <tr key={index}>
+        <td>{list.ingredients[0].parsed[0].quantity}</td>
+        <td>{list.ingredients[0].parsed[0].measure}</td>
+        <td>{list.ingredients[0].parsed[0].food}</td>
+        <td>{list.calories}</td>
+        <td>{list.totalWeight}</td>
+        <td>
+          <Button
+            color="danger"
+            onClick={() => {
+              handleRemove(index);
+            }}
+          >
+            X
+          </Button>
+        </td>
+      </tr>
+    );
+  });
+
+  if (loading) {
+    return (
+      <div className="wrapper-compare-loading">
+        <Container
+          className="min-vh-100 d-flex flex-column justify-content-center"
+          fluid
+        >
+          <Row className="d-flex justify-content-center">
+            <Spinner className="compare-spinner" />
+          </Row>
+        </Container>
+      </div>
+    );
+  }
 
   return (
     <React.Fragment>
       <Navbar currentPage="nutritionanalyze" />
-      <Container>
-        <div className="content mt-5">
-          <div className="input-section">
-            <div className="row">
-              <div className="col-4">
-                <p>qty</p>
-                <input ref={qtyInput} name="qty" type="number" />
-              </div>
-              <div className="col-4">
-                <p>unit</p>
-                <input ref={unitInput} name="unit" type="text" />
-              </div>
-              <div className="col-4">
-                <p>food</p>
-                <input ref={foodInput} name="food" type="text" />
-              </div>
-            </div>
-            <div className="row">
-              <div className="mt-3">
-                <Button
-                  onClick={handle_add_data}
-                  className="add_btn"
-                  color="primary"
-                >
-                  ADD
-                </Button>
-              </div>
-            </div>
-          </div>
-
-          <div className="list-item-section mt-5">
-            <div className="row">
-              <div className="col-6">
-                <Table>
-                  <thead>
-                    <tr>
-                      <th>qty</th>
-                      <th>Unit</th>
-                      <th>Food</th>
-                      <th>Calories</th>
-                      <th>Weight</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {itemList.map((item, idx) => {
-                      return (
-                        <tr key={idx}>
-                          <td>{item.qty}</td>
-                          <td>{item.unit}</td>
-                          <td>{item.food}</td>
-                          <td>{nutrition.calories}</td>
-                          <td>{nutrition.totalWeight}</td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </Table>
-              </div>
-              <div className="col-6">
-                <img
-                  className="nutrition-img"
-                  src={process.env.PUBLIC_URL + "/img/nutrition-table.jpg"}
-                />
-              </div>
-            </div>
-          </div>
+      <Container className="mt-4" style={{ minHeight: "600px" }} fluid>
+        <div>
+          <h1 className="text-center">Nutrition Analysis</h1>
         </div>
+        <Form onSubmit={handleSubmit} className="text-center">
+          <FormGroup className="justify-content-center" row>
+            <Col>
+              <Label>Quantity</Label>
+              <input
+                className="form-control"
+                ref={qtyInput}
+                type="number"
+                min="0"
+              />
+            </Col>
+            <Col>
+              <Label>Unit</Label>
+              <input className="form-control" ref={unitInput} type="text" />
+            </Col>
+            <Col>
+              <Label>Food</Label>
+              <input className="form-control" ref={foodInput} type="text" />
+            </Col>
+            <Col md={2}>
+              <Button className="mt-4" color="success">
+                Add
+              </Button>
+            </Col>
+          </FormGroup>
+        </Form>
+
+        <Table striped>
+          <thead>
+            <tr>
+              <th>Qty</th>
+              <th>Unit</th>
+              <th>Food</th>
+              <th>Calories</th>
+              <th>Weight</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>{renderTableContent}</tbody>
+        </Table>
+
+        <Table>
+          <thead>
+            <tr>
+              <th>Protein</th>
+              <th>Fat</th>
+              <th>Carbohydrates</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{totalCalProtein}</td>
+              <td>{totalCalFat}</td>
+              <td>{totalCalCarbo}</td>
+            </tr>
+          </tbody>
+        </Table>
       </Container>
+      <Footer />
     </React.Fragment>
   );
 };
