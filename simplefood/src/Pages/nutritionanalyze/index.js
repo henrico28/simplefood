@@ -12,6 +12,10 @@ import {
 } from "reactstrap";
 import { Navbar, Footer } from "../../Components";
 import axios from "axios";
+import CanvasJSReact from "../../lib/canvasjs.react";
+
+var CanvasJS = CanvasJSReact.CanvasJS;
+var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
 const NutriotionAnalyze = (props) => {
   let qtyInput = React.createRef();
@@ -26,6 +30,22 @@ const NutriotionAnalyze = (props) => {
 
   const API_ID = "06857527";
   const API_KEY = "7f0923e54e4824386bfb2a0909cd7875";
+
+  const options = {
+    title: {
+      text: "Coba cuk",
+    },
+    data: [
+      {
+        type: "doughnut",
+        dataPoints: [
+          { label: "Protein", y: totalCalProtein },
+          { label: "Carbs", y: totalCalCarbo },
+          { label: "Fat", y: totalCalFat },
+        ],
+      },
+    ],
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -107,16 +127,27 @@ const NutriotionAnalyze = (props) => {
                 className="form-control"
                 ref={qtyInput}
                 type="number"
-                min="0"
+                min="1"
+                placeholder="10"
               />
             </Col>
             <Col>
               <Label>Unit</Label>
-              <input className="form-control" ref={unitInput} type="text" />
+              <input
+                className="form-control"
+                ref={unitInput}
+                type="text"
+                placeholder="oz"
+              />
             </Col>
             <Col>
               <Label>Food</Label>
-              <input className="form-control" ref={foodInput} type="text" />
+              <input
+                className="form-control"
+                ref={foodInput}
+                type="text"
+                placeholder="rice"
+              />
             </Col>
             <Col md={2}>
               <Button className="mt-4" color="success">
@@ -140,22 +171,29 @@ const NutriotionAnalyze = (props) => {
           <tbody>{renderTableContent}</tbody>
         </Table>
 
-        <Table>
-          <thead>
-            <tr>
-              <th>Protein</th>
-              <th>Fat</th>
-              <th>Carbohydrates</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>{totalCalProtein}</td>
-              <td>{totalCalFat}</td>
-              <td>{totalCalCarbo}</td>
-            </tr>
-          </tbody>
-        </Table>
+        <Row className="align-items-center mt-5">
+          <Col>
+            <Table>
+              <thead>
+                <tr>
+                  <th>Protein</th>
+                  <th>Fat</th>
+                  <th>Carbohydrates</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{totalCalProtein}</td>
+                  <td>{totalCalFat}</td>
+                  <td>{totalCalCarbo}</td>
+                </tr>
+              </tbody>
+            </Table>
+          </Col>
+          <Col>
+            <CanvasJSChart options={options} />
+          </Col>
+        </Row>
       </Container>
       <Footer />
     </React.Fragment>
