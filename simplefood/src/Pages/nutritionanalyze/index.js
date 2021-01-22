@@ -3,6 +3,7 @@ import {
   Container,
   Form,
   FormGroup,
+  FormText,
   Label,
   Row,
   Col,
@@ -13,6 +14,7 @@ import {
 import { Navbar, Footer } from "../../Components";
 import axios from "axios";
 import CanvasJSReact from "../../lib/canvasjs.react";
+import { Wrapper } from "./style";
 
 var CanvasJS = CanvasJSReact.CanvasJS;
 var CanvasJSChart = CanvasJSReact.CanvasJSChart;
@@ -23,6 +25,7 @@ const NutriotionAnalyze = (props) => {
   let foodInput = React.createRef();
 
   let [loading, setLoading] = useState(false);
+  let [error, setError] = useState(false);
   let [list, setList] = useState([]);
   let [totalCalProtein, setTotalCalProtein] = useState([]);
   let [totalCalFat, setTotalCalFat] = useState([]);
@@ -33,7 +36,7 @@ const NutriotionAnalyze = (props) => {
 
   const options = {
     title: {
-      text: "Coba cuk",
+      text: "Energy",
     },
     data: [
       {
@@ -49,6 +52,7 @@ const NutriotionAnalyze = (props) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setError(false);
     let ingridient = {
       qty: qtyInput.current.value,
       unit: unitInput.current.value,
@@ -60,23 +64,26 @@ const NutriotionAnalyze = (props) => {
     const req = `https://api.edamam.com/api/nutrition-data?app_id=${API_ID}&app_key=${API_KEY}&ingr=${encode_str}`;
     setLoading(true);
     const res = await axios.get(req);
-    setList([...list, res.data]);
+    if (res.data.calories !== 0) {
+      setList([...list, res.data]);
 
-    setTotalCalProtein([
-      ...totalCalProtein,
-      res.data.totalNutrientsKCal.PROCNT_KCAL.quantity,
-    ]);
+      setTotalCalProtein([
+        ...totalCalProtein,
+        res.data.totalNutrientsKCal.PROCNT_KCAL.quantity,
+      ]);
 
-    setTotalCalFat([
-      ...totalCalFat,
-      res.data.totalNutrientsKCal.FAT_KCAL.quantity,
-    ]);
+      setTotalCalFat([
+        ...totalCalFat,
+        res.data.totalNutrientsKCal.FAT_KCAL.quantity,
+      ]);
 
-    setTotalCalCarbo([
-      ...totalCalCarbo,
-      res.data.totalNutrientsKCal.CHOCDF_KCAL.quantity,
-    ]);
-
+      setTotalCalCarbo([
+        ...totalCalCarbo,
+        res.data.totalNutrientsKCal.CHOCDF_KCAL.quantity,
+      ]);
+    } else {
+      setError(true);
+    }
     setLoading(false);
   };
 
@@ -99,16 +106,16 @@ const NutriotionAnalyze = (props) => {
         <td>{list.ingredients[0].parsed[0].quantity}</td>
         <td>{list.ingredients[0].parsed[0].measure}</td>
         <td>{list.ingredients[0].parsed[0].food}</td>
-        <td>{list.calories}</td>
-        <td>{list.totalWeight}</td>
-        <td>
+        <td>{Number(list.calories).toFixed(2)}</td>
+        <td>{Number(list.totalWeight).toFixed(2)}</td>
+        <td className="text-center">
           <Button
             color="danger"
             onClick={() => {
               handleRemove(index);
             }}
           >
-            X
+            x
           </Button>
         </td>
       </tr>
@@ -117,104 +124,130 @@ const NutriotionAnalyze = (props) => {
 
   if (loading) {
     return (
-      <div className="wrapper-compare-loading">
-        <Container
-          className="min-vh-100 d-flex flex-column justify-content-center"
-          fluid
-        >
-          <Row className="d-flex justify-content-center">
-            <Spinner className="compare-spinner" />
-          </Row>
-        </Container>
-      </div>
+      <Wrapper>
+        <div className="wrapper-nutrition-analyze-loading">
+          <Container
+            className="min-vh-100 d-flex flex-column justify-content-center"
+            fluid
+          >
+            <Row className="d-flex justify-content-center">
+              <Spinner className="nutrition-analyze-spinner" />
+            </Row>
+          </Container>
+        </div>
+      </Wrapper>
     );
   }
 
   return (
-    <React.Fragment>
+    <Wrapper>
       <Navbar currentPage="nutritionanalyze" />
-      <Container className="mt-4" style={{ minHeight: "600px" }} fluid>
-        <div>
-          <h1 className="text-center">Nutrition Analysis</h1>
-        </div>
-        <Form onSubmit={handleSubmit} className="text-center">
-          <FormGroup className="justify-content-center" row>
-            <Col>
-              <Label>Quantity</Label>
-              <input
-                className="form-control"
-                ref={qtyInput}
-                type="number"
-                min="1"
-                placeholder="10"
-              />
+      <div className="wrapper-nutrition-analyze">
+        <Container className="mt-4" fluid>
+          <div>
+            <h1 className="text-center nutrition-analyze-title">
+              Nutrition Analysis
+            </h1>
+          </div>
+          <Form
+            onSubmit={handleSubmit}
+            className="text-center wrapper-nutrition-analyze-form"
+          >
+            <FormGroup className="justify-content-center" row>
+              <Col md={2}>
+                <Label className="nutrition-analyze-label">Quantity</Label>
+                <input
+                  className="form-control nutrition-analyze-input"
+                  ref={qtyInput}
+                  type="number"
+                  min="1"
+                  placeholder="Example : 10"
+                />
+              </Col>
+              <Col md={2}>
+                <Label className="nutrition-analyze-label">Unit</Label>
+                <input
+                  className="form-control nutrition-analyze-input"
+                  ref={unitInput}
+                  type="text"
+                  placeholder="Example : oz"
+                />
+              </Col>
+              <Col md={2}>
+                <Label className="nutrition-analyze-label">Food</Label>
+                <input
+                  className="form-control nutrition-analyze-input"
+                  ref={foodInput}
+                  type="text"
+                  placeholder="Example : rice"
+                />
+              </Col>
+              <Col md={1}>
+                <Button className="nutrition-analyze-button">Add</Button>
+              </Col>
+            </FormGroup>
+          </Form>
+          <FormText className={`text-center ${error === true ? "" : "d-none"}`}>
+            No food found with that name, please try again
+          </FormText>
+          <Row
+            className={`justify-content-center wrapper-nutrients-table ${
+              list.length === 0 ? "d-none" : ""
+            }`}
+          >
+            <Col md={8}>
+              <Table bordered>
+                <thead>
+                  <tr>
+                    <th className="text-center">Qty</th>
+                    <th className="text-center">Unit</th>
+                    <th className="text-center">Food</th>
+                    <th className="text-center">Calories</th>
+                    <th className="text-center">Weight</th>
+                    <th className="text-center" width="2px">
+                      Action
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>{renderTableContent}</tbody>
+              </Table>
             </Col>
-            <Col>
-              <Label>Unit</Label>
-              <input
-                className="form-control"
-                ref={unitInput}
-                type="text"
-                placeholder="oz"
-              />
-            </Col>
-            <Col>
-              <Label>Food</Label>
-              <input
-                className="form-control"
-                ref={foodInput}
-                type="text"
-                placeholder="rice"
-              />
-            </Col>
-            <Col md={2}>
-              <Button className="mt-4" color="success">
-                Add
-              </Button>
-            </Col>
-          </FormGroup>
-        </Form>
+          </Row>
 
-        <Table striped>
-          <thead>
-            <tr>
-              <th>Qty</th>
-              <th>Unit</th>
-              <th>Food</th>
-              <th>Calories</th>
-              <th>Weight</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>{renderTableContent}</tbody>
-        </Table>
-
-        <Row className="align-items-center mt-5">
-          <Col>
-            <Table>
-              <thead>
+          <Row
+            className={`align-items-center wrapper-energy ${
+              list.length === 0 ? "d-none" : ""
+            }`}
+          >
+            <Col className="justify-content-center d-flex" xs={12} md={6}>
+              <Table className="w-50 table-sm">
+                <tr>
+                  <th colSpan="2" className="text-center">
+                    Energy
+                  </th>
+                </tr>
                 <tr>
                   <th>Protein</th>
-                  <th>Fat</th>
-                  <th>Carbohydrates</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
                   <td>{totalCalProtein.reduce((a, b) => a + b, 0)}</td>
+                </tr>
+                <tr>
+                  <th>Fat</th>
                   <td>{totalCalFat.reduce((a, b) => a + b, 0)}</td>
+                </tr>
+                <tr>
+                  <th>Carbohydrates</th>
                   <td>{totalCalCarbo.reduce((a, b) => a + b, 0)}</td>
                 </tr>
-              </tbody>
-            </Table>
-          </Col>
-          <Col>
-            <CanvasJSChart options={options} />
-          </Col>
-        </Row>
-      </Container>
+              </Table>
+            </Col>
+            <Col xs={12} md={6}>
+              <CanvasJSChart options={options} />
+            </Col>
+          </Row>
+        </Container>
+      </div>
       <Footer />
-    </React.Fragment>
+    </Wrapper>
   );
 };
 

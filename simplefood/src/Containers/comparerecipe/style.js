@@ -1,19 +1,19 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const Wrapper = styled.div`
-  .wrapper-compare-loading{
-    .compare-spinner{
+  .wrapper-compare-loading {
+    .compare-spinner {
       color: #38a3a5;
       height: 3rem;
       width: 3rem;
     }
   }
 
-  .compare-title{
-    color:#22577a;
+  .compare-title {
+    color: #22577a;
   }
 
-  .recipedetails-wrapper{
+  .recipedetails-wrapper {
     .recipedetails-name {
       color: #38a3a5;
     }
@@ -33,7 +33,7 @@ export const Wrapper = styled.div`
     }
   }
 
-  .nodata-height{
-    min-height: 600px;
+  .nodata-height {
+    min-height: 700px;
   }
 `;
