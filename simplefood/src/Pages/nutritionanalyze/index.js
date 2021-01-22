@@ -24,9 +24,9 @@ const NutriotionAnalyze = (props) => {
 
   let [loading, setLoading] = useState(false);
   let [list, setList] = useState([]);
-  let [totalCalProtein, setTotalCalProtein] = useState(0);
-  let [totalCalFat, setTotalCalFat] = useState(0);
-  let [totalCalCarbo, setTotalCalCarbo] = useState(0);
+  let [totalCalProtein, setTotalCalProtein] = useState([]);
+  let [totalCalFat, setTotalCalFat] = useState([]);
+  let [totalCalCarbo, setTotalCalCarbo] = useState([]);
 
   const API_ID = "06857527";
   const API_KEY = "7f0923e54e4824386bfb2a0909cd7875";
@@ -39,9 +39,9 @@ const NutriotionAnalyze = (props) => {
       {
         type: "doughnut",
         dataPoints: [
-          { label: "Protein", y: totalCalProtein },
-          { label: "Carbs", y: totalCalCarbo },
-          { label: "Fat", y: totalCalFat },
+          { label: "Protein", y: totalCalProtein.reduce((a, b) => a + b, 0) },
+          { label: "Carbs", y: totalCalCarbo.reduce((a, b) => a + b, 0) },
+          { label: "Fat", y: totalCalFat.reduce((a, b) => a + b, 0) },
         ],
       },
     ],
@@ -61,18 +61,36 @@ const NutriotionAnalyze = (props) => {
     setLoading(true);
     const res = await axios.get(req);
     setList([...list, res.data]);
-    setTotalCalProtein(
-      totalCalProtein + res.data.totalNutrientsKCal.PROCNT_KCAL.quantity
-    );
-    setTotalCalFat(totalCalFat + res.data.totalNutrientsKCal.FAT_KCAL.quantity);
-    setTotalCalCarbo(
-      totalCalCarbo + res.data.totalNutrientsKCal.CHOCDF_KCAL.quantity
-    );
+
+    setTotalCalProtein([
+      ...totalCalProtein,
+      res.data.totalNutrientsKCal.PROCNT_KCAL.quantity,
+    ]);
+
+    setTotalCalFat([
+      ...totalCalFat,
+      res.data.totalNutrientsKCal.FAT_KCAL.quantity,
+    ]);
+
+    setTotalCalCarbo([
+      ...totalCalCarbo,
+      res.data.totalNutrientsKCal.CHOCDF_KCAL.quantity,
+    ]);
+
     setLoading(false);
   };
 
   const handleRemove = (indexToRemove) => {
     setList([...list.filter((_, index) => index !== indexToRemove)]);
+    setTotalCalFat([
+      ...totalCalFat.filter((_, index) => index !== indexToRemove),
+    ]);
+    setTotalCalCarbo([
+      ...totalCalCarbo.filter((_, index) => index !== indexToRemove),
+    ]);
+    setTotalCalProtein([
+      ...totalCalProtein.filter((_, index) => index !== indexToRemove),
+    ]);
   };
 
   const renderTableContent = list.map((list, index) => {
@@ -183,9 +201,9 @@ const NutriotionAnalyze = (props) => {
               </thead>
               <tbody>
                 <tr>
-                  <td>{totalCalProtein}</td>
-                  <td>{totalCalFat}</td>
-                  <td>{totalCalCarbo}</td>
+                  <td>{totalCalProtein.reduce((a, b) => a + b, 0)}</td>
+                  <td>{totalCalFat.reduce((a, b) => a + b, 0)}</td>
+                  <td>{totalCalCarbo.reduce((a, b) => a + b, 0)}</td>
                 </tr>
               </tbody>
             </Table>
